@@ -1,0 +1,6 @@
+<% layout('boilerplate')%>
+<h1 class="text-center p-4">Something went wrong, Go Back</h1>
+<h2 class="text-center p-4"><%= err %> </h2>
+<% if (process.env.NODE_ENV !== 'production') { %>
+<p><%= err.stack %></p>
+<% } %>

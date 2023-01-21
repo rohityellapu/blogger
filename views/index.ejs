@@ -1,0 +1,150 @@
+<% layout('boilerplate')%>
+<div class="container p-lg-4">
+    <!-- Button trigger new blog modal -->
+    <div class="d-flex justify-content-center m-2">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBlog">
+            Create a new blog
+        </button>
+    </div>
+
+
+    <!-- New Blog Modal -->
+    <div class="modal fade" id="addBlog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class=" modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add Blog</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/blog" method="post" class="mb-3 needs-validation text-dark" novalidate>
+                        <div class="mb-3">
+                            <label for="blog-title" class="form-label">Blog Title</label>
+                            <input type="text" required class="form-control" id="blog-title" name="title"
+                                placeholder="Title">
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please enter the title.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="blog-description" class="form-label">Blog Description</label>
+                            <textarea class="form-control" required id="blog-description" rows="6"
+                                placeholder="Tell us something about the blog." name="description"></textarea>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please tell us about the blog.
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-primary" type="submit">Add Blog</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <h1 class="text-center m-2">All Blogs</h1>
+
+    <!-- Iterating all blogs -->
+    <div class="d-flex flex-column p-lg-4 text-dark">
+        <% for(let blog of blogs) { %>
+        <div class="card m-2">
+            <div class="card-body">
+                <h5 class="card-title"><%= blog.title %> </h5>
+                <p class="card-text"><%= blog.description %> </p>
+                <!-- Button triggers edit blog modal -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#editBlog<%= blog.id %>">
+                    Edit Blog
+                </button>
+                <!-- Button triggers delete blog modal -->
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                    data-bs-target="#deleteBlog<%= blog.id %>">
+                    Delete
+                </button>
+                <!-- Update Blog Modal -->
+                <div class="modal fade" id="editBlog<%= blog.id %>" tabindex="-1" aria-labelledby="ModalLabel"
+                    aria-hidden="true">
+                    <div class=" modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Update Blog</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/blog/<%= blog.id %>?_method=PUT" method="post"
+                                    class="mb-3 needs-validation" novalidate>
+                                    <div class="mb-3">
+                                        <label for="blog-title" class="form-label">Blog Title</label>
+                                        <input type="text" required class="form-control" id="blog-title"
+                                            value="<%= blog.title %> " name="title" placeholder="Title">
+                                        <div class="valid-feedback">
+                                            Looks good!
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Please enter the title.
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="blog-description" class="form-label">Blog
+                                            Description</label>
+                                        <textarea class="form-control" required id="blog-description" rows="6"
+                                            placeholder="Tell us something about the blog."
+                                            name="description"><%= blog.description %> </textarea>
+                                        <div class="valid-feedback">
+                                            Looks good!
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Please tell us about the blog.
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn btn-primary" type="submit">Update Blog</button>
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- Delete Blog Modal -->
+                <div class="modal fade" id="deleteBlog<%= blog.id %>" tabindex="-1" aria-labelledby="ModalLabel"
+                    aria-hidden="true">
+                    <div class=" modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="ModalLabel">Are you sure?</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h5 class="card-title"><%= blog.title %> </h5>
+                                <p class="card-text"><%= blog.description %> </p>
+                                <form action="/blog/<%= blog.id %>?_method=DELETE" method="POST">
+                                    <button class="btn btn-danger" type="submit">Delete Blog</button>
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% } %>
+    </div>
+
+</div>
