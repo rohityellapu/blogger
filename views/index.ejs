@@ -1,193 +1,150 @@
-<!doctype html>
-<html lang="en">
-
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Blog App</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-            integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-    </head>
-
-    <body class="bg-dark bg-gradient text-white">
-        <div class="container p-lg-4">
-            <!-- Button trigger new blog modal -->
-            <div class="d-flex justify-content-center m-2">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBlog">
-                    Create a new blog
-                </button>
-            </div>
+<% layout('boilerplate')%>
+<div class="container p-lg-4">
+    <!-- Button trigger new blog modal -->
+    <div class="d-flex justify-content-center m-2">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBlog">
+            Create a new blog
+        </button>
+    </div>
 
 
-            <!-- New Blog Modal -->
-            <div class="modal fade" id="addBlog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class=" modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Add Blog</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- New Blog Modal -->
+    <div class="modal fade" id="addBlog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class=" modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add Blog</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/blog" method="post" class="mb-3 needs-validation text-dark" novalidate>
+                        <div class="mb-3">
+                            <label for="blog-title" class="form-label">Blog Title</label>
+                            <input type="text" required class="form-control" id="blog-title" name="title"
+                                placeholder="Title">
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please enter the title.
+                            </div>
                         </div>
-                        <div class="modal-body">
-                            <form action="/blog" method="post" class="mb-3 needs-validation text-dark" novalidate>
-                                <div class="mb-3">
-                                    <label for="blog-title" class="form-label">Blog Title</label>
-                                    <input type="text" required class="form-control" id="blog-title" name="title"
-                                        placeholder="Title">
-                                    <div class="valid-feedback">
-                                        Looks good!
+                        <div class="mb-3">
+                            <label for="blog-description" class="form-label">Blog Description</label>
+                            <textarea class="form-control" required id="blog-description" rows="6"
+                                placeholder="Tell us something about the blog." name="description"></textarea>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                            <div class="invalid-feedback">
+                                Please tell us about the blog.
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-primary" type="submit">Add Blog</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <h1 class="text-center m-2">All Blogs</h1>
+
+    <!-- Iterating all blogs -->
+    <div class="d-flex flex-column p-lg-4 text-dark">
+        <% for(let blog of blogs) { %>
+        <div class="card m-2">
+            <div class="card-body">
+                <h5 class="card-title"><%= blog.title %> </h5>
+                <p class="card-text"><%= blog.description %> </p>
+                <!-- Button triggers edit blog modal -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#editBlog<%= blog.id %>">
+                    Edit Blog
+                </button>
+                <!-- Button triggers delete blog modal -->
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                    data-bs-target="#deleteBlog<%= blog.id %>">
+                    Delete
+                </button>
+                <!-- Update Blog Modal -->
+                <div class="modal fade" id="editBlog<%= blog.id %>" tabindex="-1" aria-labelledby="ModalLabel"
+                    aria-hidden="true">
+                    <div class=" modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Update Blog</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/blog/<%= blog.id %>?_method=PUT" method="post"
+                                    class="mb-3 needs-validation" novalidate>
+                                    <div class="mb-3">
+                                        <label for="blog-title" class="form-label">Blog Title</label>
+                                        <input type="text" required class="form-control" id="blog-title"
+                                            value="<%= blog.title %> " name="title" placeholder="Title">
+                                        <div class="valid-feedback">
+                                            Looks good!
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Please enter the title.
+                                        </div>
                                     </div>
-                                    <div class="invalid-feedback">
-                                        Please enter the title.
+                                    <div class="mb-3">
+                                        <label for="blog-description" class="form-label">Blog
+                                            Description</label>
+                                        <textarea class="form-control" required id="blog-description" rows="6"
+                                            placeholder="Tell us something about the blog."
+                                            name="description"><%= blog.description %> </textarea>
+                                        <div class="valid-feedback">
+                                            Looks good!
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Please tell us about the blog.
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="blog-description" class="form-label">Blog Description</label>
-                                    <textarea class="form-control" required id="blog-description" rows="6"
-                                        placeholder="Tell us something about the blog." name="description"></textarea>
-                                    <div class="valid-feedback">
-                                        Looks good!
+                                    <div class="col-12">
+                                        <button class="btn btn-primary" type="submit">Update Blog</button>
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
                                     </div>
-                                    <div class="invalid-feedback">
-                                        Please tell us about the blog.
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <button class="btn btn-primary" type="submit">Add Blog</button>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- Delete Blog Modal -->
+                <div class="modal fade" id="deleteBlog<%= blog.id %>" tabindex="-1" aria-labelledby="ModalLabel"
+                    aria-hidden="true">
+                    <div class=" modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="ModalLabel">Are you sure?</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h5 class="card-title"><%= blog.title %> </h5>
+                                <p class="card-text"><%= blog.description %> </p>
+                                <form action="/blog/<%= blog.id %>?_method=DELETE" method="POST">
+                                    <button class="btn btn-danger" type="submit">Delete Blog</button>
                                     <button type="button" class="btn btn-secondary"
                                         data-bs-dismiss="modal">Close</button>
-                                </div>
-                            </form>
-                        </div>
+                                </form>
+                            </div>
 
+                        </div>
                     </div>
                 </div>
             </div>
-
-
-            <h1 class="text-center m-2">All Blogs</h1>
-
-            <!-- Iterating all blogs -->
-            <div class="d-flex flex-column p-lg-4 text-dark">
-                <% for(let blog of blogs) { %>
-                <div class="card m-2">
-                    <div class="card-body">
-                        <h5 class="card-title"><%= blog.title %> </h5>
-                        <p class="card-text"><%= blog.description %> </p>
-                        <!-- Button triggers edit blog modal -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#editBlog<%= blog.id %>">
-                            Edit Blog
-                        </button>
-                        <!-- Button triggers delete blog modal -->
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                            data-bs-target="#deleteBlog<%= blog.id %>">
-                            Delete
-                        </button>
-                        <!-- Update Blog Modal -->
-                        <div class="modal fade" id="editBlog<%= blog.id %>" tabindex="-1" aria-labelledby="ModalLabel"
-                            aria-hidden="true">
-                            <div class=" modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Update Blog</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="/blog/<%= blog.id %>?_method=PUT" method="post"
-                                            class="mb-3 needs-validation" novalidate>
-                                            <div class="mb-3">
-                                                <label for="blog-title" class="form-label">Blog Title</label>
-                                                <input type="text" required class="form-control" id="blog-title"
-                                                    value="<%= blog.title %> " name="title" placeholder="Title">
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                                <div class="invalid-feedback">
-                                                    Please enter the title.
-                                                </div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="blog-description" class="form-label">Blog
-                                                    Description</label>
-                                                <textarea class="form-control" required id="blog-description" rows="6"
-                                                    placeholder="Tell us something about the blog."
-                                                    name="description"><%= blog.description %> </textarea>
-                                                <div class="valid-feedback">
-                                                    Looks good!
-                                                </div>
-                                                <div class="invalid-feedback">
-                                                    Please tell us about the blog.
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <button class="btn btn-primary" type="submit">Update Blog</button>
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Close</button>
-                                            </div>
-                                        </form>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Delete Blog Modal -->
-                        <div class="modal fade" id="deleteBlog<%= blog.id %>" tabindex="-1" aria-labelledby="ModalLabel"
-                            aria-hidden="true">
-                            <div class=" modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="ModalLabel">Are you sure?</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <h5 class="card-title"><%= blog.title %> </h5>
-                                        <p class="card-text"><%= blog.description %> </p>
-                                        <form action="/blog/<%= blog.id %>?_method=DELETE" method="POST">
-                                            <button class="btn btn-danger" type="submit">Delete Blog</button>
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Close</button>
-                                        </form>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <% } %>
-            </div>
-
         </div>
-        <!-- Footer for source and profile links -->
-        <footer class="bg-dark p-2">
-            <div class="p text-center">
-                <p>Built by Rohit Yellapu
-                    <a href="https://www.linkedin.com/in/rohit-yellapu/" target='_blank'><img style="height: 2rem;"
-                            class="p-1" src="https://img.icons8.com/color/512/linkedin-2.png" alt="linkedin" /></a>
-                    <a href="https://twitter.com/rohit_yellapu" target='_blank'><img style="height: 2rem;" class="p-1"
-                            src="https://img.icons8.com/color/512/twitter.png" alt="twitter" /></a>
-                    <a href="https://github.com/rohityellapu" target='_blank'><img style="height: 2rem;" class="p-1"
-                            src="https://img.icons8.com/glyph-neue/512/github.png" alt="github" /></a>
-                </p>
-                <p><a href="https://github.com/rohityellapu/blogger" target="_blank" class="link-info nav-link">Source
-                        code<img class="p-1" style="height: 2rem;"
-                            src="https://img.icons8.com/glyph-neue/512/github.png" alt="github" /></a></p>
-            </div>
-        </footer>
+        <% } %>
+    </div>
 
-
-
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-            crossorigin="anonymous"></script>
-
-
-        <script src="/scripts/validation.js">
-
-        </script>
-    </body>
-
-</html>
+</div>
