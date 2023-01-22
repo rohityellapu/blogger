@@ -75,6 +75,7 @@ app.post('/blog', (req, res) => {
 
 })
 
+// Update blog API
 app.put('/blog/:id', (req, res) => {
     const { id } = req.params;
     const { title, description } = req.body;
@@ -96,6 +97,7 @@ app.put('/blog/:id', (req, res) => {
     }
 })
 
+// Delete blog API
 app.delete('/blog/:id', (req, res) => {
     const { id } = req.params;
     // Check for id
@@ -120,5 +122,6 @@ app.get('/*', (req, res) => {
     res.status(404).render('err.ejs', { err: "Page Not Found" })
 })
 
+// Listen to continoues API calls
 app.listen(PORT, () => console.log('Server is on PORT', PORT));
 
